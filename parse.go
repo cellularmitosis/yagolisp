@@ -17,12 +17,14 @@ const (
 	AST_LIST    = 2
 	AST_SYMBOL  = 3
 	AST_STRING  = 4
+	AST_INT     = 5
 )
 
 var astNodeTypes = []ASTNodeType{
 	{ID: AST_LIST, Name: "AST_LIST"},
 	{ID: AST_SYMBOL, Name: "AST_SYMBOL"},
 	{ID: AST_STRING, Name: "AST_STRING"},
+	{ID: AST_INT, Name: "AST_INT"},
 }
 
 // ASTNode is a structure describing a node in an abstract syntax tree.
@@ -32,16 +34,10 @@ type ASTNode struct {
 	Subnodes []*ASTNode
 }
 
-// grammar:
-// program = WS? expr (WS expr)* WS?
-// expr = atom | list
-// atom = SYMBOL | STRING
-// list = OPAREN WS? CPAREN | OPAREN WS? expr (WS expr)* WS? CPAREN
-
 // grammar (discarding whitespace):
 // AST_PROGRAM = expr+
 // expr = atom | AST_LIST
-// atom = AST_SYMBOL | AST_STRING
+// atom = AST_SYMBOL | AST_STRING | AST_INT
 // AST_LIST = TOK_OPAREN expr* TOK_CPAREN
 
 // Tries to parse the next token as a string.  Returns an AST node and the index of the next token.
@@ -68,6 +64,21 @@ func parseSymbol(tokens []Token, index uint) (*ASTNode, uint) {
 
 	ast := ASTNode{
 		TypeID:   AST_SYMBOL,
+		Bytes:    token.Bytes,
+		Subnodes: nil,
+	}
+	return &ast, index + 1
+}
+
+// Tries to parse the next token as an int.  Returns an AST node and the index of the next token.
+func parseInt(tokens []Token, index uint) (*ASTNode, uint) {
+	token := tokens[index]
+	if token.TypeID != TOK_INT {
+		return nil, index
+	}
+
+	ast := ASTNode{
+		TypeID:   AST_INT,
 		Bytes:    token.Bytes,
 		Subnodes: nil,
 	}
@@ -120,11 +131,15 @@ func parseList(tokens []Token, index uint) (*ASTNode, uint) {
 
 // Tries to parse the next token as an atom.  Returns an AST node and the index of the next token.
 func parseAtom(tokens []Token, index uint) (*ASTNode, uint) {
-	ast, index2 := parseSymbol(tokens, index)
+	ast, index2 := parseString(tokens, index)
 	if ast != nil {
 		return ast, index2
 	}
-	ast, index2 = parseString(tokens, index)
+	ast, index2 = parseInt(tokens, index)
+	if ast != nil {
+		return ast, index2
+	}
+	ast, index2 = parseSymbol(tokens, index)
 	if ast != nil {
 		return ast, index2
 	}

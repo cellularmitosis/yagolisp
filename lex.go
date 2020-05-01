@@ -21,14 +21,16 @@ const (
 	TOK_STRING = 3
 	TOK_WSPACE = 4
 	TOK_SYMBOL = 5
+	TOK_INT    = 6
 )
 
 // The table to token definitions.
 var tokTypes = []TokenType{
 	{ID: TOK_OPAREN, Name: "TOK_OPAREN", Pattern: `^\(`, Regex: nil},
 	{ID: TOK_CPAREN, Name: "TOK_CPAREN", Pattern: `^\)`, Regex: nil},
-	{ID: TOK_STRING, Name: "TOK_STRING", Pattern: `^"([^"\\]|\\[\s\S])*"`, Regex: nil},
 	{ID: TOK_WSPACE, Name: "TOK_WSPACE", Pattern: `^[\s]+`, Regex: nil},
+	{ID: TOK_STRING, Name: "TOK_STRING", Pattern: `^"([^"\\]|\\[\s\S])*"`, Regex: nil},
+	{ID: TOK_INT, Name: "TOK_INT", Pattern: `^\d+`, Regex: nil},
 	{ID: TOK_SYMBOL, Name: "TOK_SYMBOL", Pattern: `^[^\(\)"\s]+`, Regex: nil},
 }
 
