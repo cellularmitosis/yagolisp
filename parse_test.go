@@ -8,15 +8,19 @@ func checkASTTypeID(ast *ASTNode, expectedTypeID uint, t *testing.T) {
 	}
 }
 
+func checkSubnodesLen(ast *ASTNode, expectedLen int, t *testing.T) {
+	if len(ast.Subnodes) != expectedLen {
+		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), expectedLen)
+	}
+}
+
 func TestParseEmpty(t *testing.T) {
 	mustCompileRegexes()
 	program := []byte("")
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
 	checkASTTypeID(ast, AST_PROGRAM, t)
-	if len(ast.Subnodes) != 0 {
-		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), 1)
-	}
+	checkSubnodesLen(ast, 0, t)
 }
 
 func TestParseSymbol(t *testing.T) {
@@ -25,9 +29,7 @@ func TestParseSymbol(t *testing.T) {
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
 	checkASTTypeID(ast, AST_PROGRAM, t)
-	if len(ast.Subnodes) != 1 {
-		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), 1)
-	}
+	checkSubnodesLen(ast, 1, t)
 	ast = ast.Subnodes[0]
 	checkASTTypeID(ast, AST_SYMBOL, t)
 }
@@ -38,9 +40,7 @@ func TestParseString(t *testing.T) {
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
 	checkASTTypeID(ast, AST_PROGRAM, t)
-	if len(ast.Subnodes) != 1 {
-		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), 1)
-	}
+	checkSubnodesLen(ast, 1, t)
 	ast = ast.Subnodes[0]
 	checkASTTypeID(ast, AST_STRING, t)
 }
@@ -51,9 +51,7 @@ func TestParseInt(t *testing.T) {
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
 	checkASTTypeID(ast, AST_PROGRAM, t)
-	if len(ast.Subnodes) != 1 {
-		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), 1)
-	}
+	checkSubnodesLen(ast, 1, t)
 	ast = ast.Subnodes[0]
 	checkASTTypeID(ast, AST_INT, t)
 }
@@ -64,9 +62,7 @@ func TestParseNegInt(t *testing.T) {
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
 	checkASTTypeID(ast, AST_PROGRAM, t)
-	if len(ast.Subnodes) != 1 {
-		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), 1)
-	}
+	checkSubnodesLen(ast, 1, t)
 	ast = ast.Subnodes[0]
 	checkASTTypeID(ast, AST_INT, t)
 }
@@ -77,9 +73,7 @@ func TestParseReal(t *testing.T) {
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
 	checkASTTypeID(ast, AST_PROGRAM, t)
-	if len(ast.Subnodes) != 1 {
-		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), 1)
-	}
+	checkSubnodesLen(ast, 1, t)
 	ast = ast.Subnodes[0]
 	checkASTTypeID(ast, AST_REAL, t)
 }
@@ -90,9 +84,7 @@ func TestParseNegReal(t *testing.T) {
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
 	checkASTTypeID(ast, AST_PROGRAM, t)
-	if len(ast.Subnodes) != 1 {
-		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), 1)
-	}
+	checkSubnodesLen(ast, 1, t)
 	ast = ast.Subnodes[0]
 	checkASTTypeID(ast, AST_REAL, t)
 }
@@ -103,14 +95,10 @@ func TestParseListEmpty(t *testing.T) {
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
 	checkASTTypeID(ast, AST_PROGRAM, t)
-	if len(ast.Subnodes) != 1 {
-		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), 1)
-	}
+	checkSubnodesLen(ast, 1, t)
 	ast = ast.Subnodes[0]
 	checkASTTypeID(ast, AST_LIST, t)
-	if len(ast.Subnodes) != 0 {
-		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), 0)
-	}
+	checkSubnodesLen(ast, 0, t)
 }
 
 func TestParseListSymbolStringInt(t *testing.T) {
@@ -119,14 +107,10 @@ func TestParseListSymbolStringInt(t *testing.T) {
 	tokens := mustLex(program)
 	prog := mustParse(tokens)
 	checkASTTypeID(prog, AST_PROGRAM, t)
-	if len(prog.Subnodes) != 1 {
-		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(prog.Subnodes), 1)
-	}
+	checkSubnodesLen(prog, 1, t)
 	list := prog.Subnodes[0]
 	checkASTTypeID(list, AST_LIST, t)
-	if len(list.Subnodes) != 3 {
-		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(list.Subnodes), 3)
-	}
+	checkSubnodesLen(list, 3, t)
 	sym := list.Subnodes[0]
 	checkASTTypeID(sym, AST_SYMBOL, t)
 	str := list.Subnodes[1]
@@ -141,12 +125,8 @@ func TestParseVectorEmpty(t *testing.T) {
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
 	checkASTTypeID(ast, AST_PROGRAM, t)
-	if len(ast.Subnodes) != 1 {
-		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), 1)
-	}
+	checkSubnodesLen(ast, 1, t)
 	ast = ast.Subnodes[0]
 	checkASTTypeID(ast, AST_VECTOR, t)
-	if len(ast.Subnodes) != 0 {
-		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), 0)
-	}
+	checkSubnodesLen(ast, 0, t)
 }
