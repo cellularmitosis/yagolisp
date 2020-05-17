@@ -3,12 +3,11 @@ package main
 func eval(ast *ASTNode) LispValue {
 	switch ast.TypeID {
 	case AST_STRING:
-		return string(ast.Bytes)
+		return ast.Value
 	case AST_INT:
-		panic("don't know how to eval that")
-		// value, err := strconv.ParseInt(ast.Bytes, 10, 64)
-		// left off here
-
+		return ast.Value
+	case AST_REAL:
+		return ast.Value
 	case AST_PROGRAM:
 		var value LispValue
 		for _, subnode := range ast.Subnodes {

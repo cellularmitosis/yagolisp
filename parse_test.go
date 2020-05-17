@@ -16,7 +16,7 @@ func checkSubnodesLen(ast *ASTNode, expectedLen int, t *testing.T) {
 
 func TestParseEmpty(t *testing.T) {
 	mustCompileRegexes()
-	program := []byte("")
+	program := []byte(``)
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
 	checkASTTypeID(ast, AST_PROGRAM, t)
@@ -37,7 +37,7 @@ func TestParseString(t *testing.T) {
 
 func TestParseReal(t *testing.T) {
 	mustCompileRegexes()
-	program := []byte("3.14159")
+	program := []byte(`3.14159`)
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
 	checkASTTypeID(ast, AST_PROGRAM, t)
@@ -49,7 +49,7 @@ func TestParseReal(t *testing.T) {
 
 func TestParseNegReal(t *testing.T) {
 	mustCompileRegexes()
-	program := []byte("-3.14159")
+	program := []byte(`-3.14159`)
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
 	checkASTTypeID(ast, AST_PROGRAM, t)
@@ -61,7 +61,7 @@ func TestParseNegReal(t *testing.T) {
 
 func TestParseInt(t *testing.T) {
 	mustCompileRegexes()
-	program := []byte("42")
+	program := []byte(`42`)
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
 	checkASTTypeID(ast, AST_PROGRAM, t)
@@ -73,7 +73,7 @@ func TestParseInt(t *testing.T) {
 
 func TestParseNegInt(t *testing.T) {
 	mustCompileRegexes()
-	program := []byte("-42")
+	program := []byte(`-42`)
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
 	checkASTTypeID(ast, AST_PROGRAM, t)
@@ -85,7 +85,7 @@ func TestParseNegInt(t *testing.T) {
 
 func TestParseKeyword(t *testing.T) {
 	mustCompileRegexes()
-	program := []byte(":foo")
+	program := []byte(`:foo`)
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
 	checkASTTypeID(ast, AST_PROGRAM, t)
@@ -97,7 +97,7 @@ func TestParseKeyword(t *testing.T) {
 
 func TestParseSymbol(t *testing.T) {
 	mustCompileRegexes()
-	program := []byte("foo")
+	program := []byte(`foo`)
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
 	checkASTTypeID(ast, AST_PROGRAM, t)
@@ -109,7 +109,7 @@ func TestParseSymbol(t *testing.T) {
 
 func TestParseListEmpty(t *testing.T) {
 	mustCompileRegexes()
-	program := []byte("()")
+	program := []byte(`()`)
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
 	checkASTTypeID(ast, AST_PROGRAM, t)
@@ -139,7 +139,7 @@ func TestParseListSymbolStringInt(t *testing.T) {
 
 func TestParseVectorEmpty(t *testing.T) {
 	mustCompileRegexes()
-	program := []byte("[]")
+	program := []byte(`[]`)
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
 	checkASTTypeID(ast, AST_PROGRAM, t)

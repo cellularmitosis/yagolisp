@@ -16,8 +16,7 @@ func TestEvalString(t *testing.T) {
 	}
 }
 
-func TestEvalNumber(t *testing.T) {
-	return
+func TestEvalInt(t *testing.T) {
 	mustCompileRegexes()
 	program := []byte(`42`)
 	tokens := mustLex(program)
@@ -28,5 +27,19 @@ func TestEvalNumber(t *testing.T) {
 		break
 	default:
 		t.Errorf("value.(type) is %d but should be int\n", typ)
+	}
+}
+
+func TestEvalReal(t *testing.T) {
+	mustCompileRegexes()
+	program := []byte(`3.14159`)
+	tokens := mustLex(program)
+	ast := mustParse(tokens)
+	value := eval(ast)
+	switch typ := value.(type) {
+	case float64:
+		break
+	default:
+		t.Errorf("value.(type) is %d but should be float64\n", typ)
 	}
 }

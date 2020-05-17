@@ -18,7 +18,7 @@ func TestLexString(t *testing.T) {
 
 func TestLexInt(t *testing.T) {
 	mustCompileRegexes()
-	source := []byte("42")
+	source := []byte(`42`)
 	tokens := mustLex(source)
 	token := tokens[0]
 	checkTokTypeID(token, TOK_INT, t)
@@ -26,7 +26,7 @@ func TestLexInt(t *testing.T) {
 
 func TestLexNegInt(t *testing.T) {
 	mustCompileRegexes()
-	source := []byte("-42")
+	source := []byte(`-42`)
 	tokens := mustLex(source)
 	token := tokens[0]
 	checkTokTypeID(token, TOK_INT, t)
@@ -34,7 +34,7 @@ func TestLexNegInt(t *testing.T) {
 
 func TestLexReal(t *testing.T) {
 	mustCompileRegexes()
-	source := []byte("3.14159")
+	source := []byte(`3.14159`)
 	tokens := mustLex(source)
 	token := tokens[0]
 	checkTokTypeID(token, TOK_REAL, t)
@@ -42,7 +42,7 @@ func TestLexReal(t *testing.T) {
 
 func TestLexNegReal(t *testing.T) {
 	mustCompileRegexes()
-	source := []byte("-3.14159")
+	source := []byte(`-3.14159`)
 	tokens := mustLex(source)
 	token := tokens[0]
 	checkTokTypeID(token, TOK_REAL, t)
@@ -50,7 +50,7 @@ func TestLexNegReal(t *testing.T) {
 
 func TestLexSymbol(t *testing.T) {
 	mustCompileRegexes()
-	source := []byte("foo")
+	source := []byte(`foo`)
 	tokens := mustLex(source)
 	token := tokens[0]
 	checkTokTypeID(token, TOK_SYMBOL, t)
@@ -58,7 +58,7 @@ func TestLexSymbol(t *testing.T) {
 
 func TestLexKeyword(t *testing.T) {
 	mustCompileRegexes()
-	source := []byte(":foo")
+	source := []byte(`:foo`)
 	tokens := mustLex(source)
 	token := tokens[0]
 	checkTokTypeID(token, TOK_KEYWORD, t)
@@ -66,7 +66,7 @@ func TestLexKeyword(t *testing.T) {
 
 func TestLexEmptyList(t *testing.T) {
 	mustCompileRegexes()
-	source := []byte("()")
+	source := []byte(`()`)
 	tokens := mustLex(source)
 	token := tokens[0]
 	checkTokTypeID(token, TOK_OPAREN, t)
@@ -76,7 +76,7 @@ func TestLexEmptyList(t *testing.T) {
 
 func TestLexEmptyVector(t *testing.T) {
 	mustCompileRegexes()
-	source := []byte("[]")
+	source := []byte(`[]`)
 	tokens := mustLex(source)
 	token := tokens[0]
 	checkTokTypeID(token, TOK_OBRACK, t)
@@ -86,7 +86,7 @@ func TestLexEmptyVector(t *testing.T) {
 
 func TestLexEmptyMap(t *testing.T) {
 	mustCompileRegexes()
-	source := []byte("{}")
+	source := []byte(`{}`)
 	tokens := mustLex(source)
 	token := tokens[0]
 	checkTokTypeID(token, TOK_OBRACE, t)
@@ -96,7 +96,7 @@ func TestLexEmptyMap(t *testing.T) {
 
 func TestLexEmptySet(t *testing.T) {
 	mustCompileRegexes()
-	source := []byte("#{}")
+	source := []byte(`#{}`)
 	tokens := mustLex(source)
 	token := tokens[0]
 	checkTokTypeID(token, TOK_OHASHBRACE, t)

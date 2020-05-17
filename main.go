@@ -38,5 +38,6 @@ func main() {
 
 	tokens := mustLex(bytes)
 	ast := mustParse(tokens)
-	_ = ast
+	value := eval(ast)
+	_ = value
 }

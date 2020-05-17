@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"math/bits"
 	"os"
+	"strconv"
 )
 
 // ASTNodeType is a structure describing a particular type of AST node.
@@ -46,6 +48,7 @@ var astNodeTypes = []ASTNodeType{
 type ASTNode struct {
 	TypeID   uint
 	Bytes    []byte
+	Value    interface{}
 	Subnodes []*ASTNode
 }
 
@@ -71,6 +74,7 @@ func parseString(tokens []Token, index uint) (*ASTNode, uint) {
 	ast := ASTNode{
 		TypeID:   AST_STRING,
 		Bytes:    token.Bytes,
+		Value:    string(token.Bytes),
 		Subnodes: nil,
 	}
 	return &ast, index + 1
@@ -84,9 +88,16 @@ func parseReal(tokens []Token, index uint) (*ASTNode, uint) {
 		return nil, index
 	}
 
+	bitSize := 64
+	value, err := strconv.ParseFloat(string(token.Bytes), bitSize)
+	if err != nil {
+		return nil, index
+	}
+
 	ast := ASTNode{
 		TypeID:   AST_REAL,
 		Bytes:    token.Bytes,
+		Value:    value,
 		Subnodes: nil,
 	}
 	return &ast, index + 1
@@ -100,9 +111,17 @@ func parseInt(tokens []Token, index uint) (*ASTNode, uint) {
 		return nil, index
 	}
 
+	base := 10
+	bitSize := bits.UintSize
+	value, err := strconv.ParseInt(string(token.Bytes), base, bitSize)
+	if err != nil {
+		return nil, index
+	}
+
 	ast := ASTNode{
 		TypeID:   AST_INT,
 		Bytes:    token.Bytes,
+		Value:    int(value),
 		Subnodes: nil,
 	}
 	return &ast, index + 1
