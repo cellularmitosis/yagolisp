@@ -24,6 +24,30 @@ func TestLexInt(t *testing.T) {
 	checkTokTypeID(token, TOK_INT, t)
 }
 
+func TestLexNegInt(t *testing.T) {
+	mustCompileRegexes()
+	source := []byte("-42")
+	tokens := mustLex(source)
+	token := tokens[0]
+	checkTokTypeID(token, TOK_INT, t)
+}
+
+func TestLexReal(t *testing.T) {
+	mustCompileRegexes()
+	source := []byte("3.14159")
+	tokens := mustLex(source)
+	token := tokens[0]
+	checkTokTypeID(token, TOK_REAL, t)
+}
+
+func TestLexNegReal(t *testing.T) {
+	mustCompileRegexes()
+	source := []byte("-3.14159")
+	tokens := mustLex(source)
+	token := tokens[0]
+	checkTokTypeID(token, TOK_REAL, t)
+}
+
 func TestLexEmptyList(t *testing.T) {
 	mustCompileRegexes()
 	source := []byte("()")
