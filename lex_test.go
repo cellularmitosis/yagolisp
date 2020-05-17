@@ -48,6 +48,22 @@ func TestLexNegReal(t *testing.T) {
 	checkTokTypeID(token, TOK_REAL, t)
 }
 
+func TestLexSymbol(t *testing.T) {
+	mustCompileRegexes()
+	source := []byte("foo")
+	tokens := mustLex(source)
+	token := tokens[0]
+	checkTokTypeID(token, TOK_SYMBOL, t)
+}
+
+func TestLexKeyword(t *testing.T) {
+	mustCompileRegexes()
+	source := []byte(":foo")
+	tokens := mustLex(source)
+	token := tokens[0]
+	checkTokTypeID(token, TOK_KEYWORD, t)
+}
+
 func TestLexEmptyList(t *testing.T) {
 	mustCompileRegexes()
 	source := []byte("()")

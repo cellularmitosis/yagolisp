@@ -23,17 +23,6 @@ func TestParseEmpty(t *testing.T) {
 	checkSubnodesLen(ast, 0, t)
 }
 
-func TestParseSymbol(t *testing.T) {
-	mustCompileRegexes()
-	program := []byte("foo")
-	tokens := mustLex(program)
-	ast := mustParse(tokens)
-	checkASTTypeID(ast, AST_PROGRAM, t)
-	checkSubnodesLen(ast, 1, t)
-	ast = ast.Subnodes[0]
-	checkASTTypeID(ast, AST_SYMBOL, t)
-}
-
 func TestParseString(t *testing.T) {
 	mustCompileRegexes()
 	program := []byte(`"foo"`)
@@ -43,28 +32,7 @@ func TestParseString(t *testing.T) {
 	checkSubnodesLen(ast, 1, t)
 	ast = ast.Subnodes[0]
 	checkASTTypeID(ast, AST_STRING, t)
-}
-
-func TestParseInt(t *testing.T) {
-	mustCompileRegexes()
-	program := []byte("42")
-	tokens := mustLex(program)
-	ast := mustParse(tokens)
-	checkASTTypeID(ast, AST_PROGRAM, t)
-	checkSubnodesLen(ast, 1, t)
-	ast = ast.Subnodes[0]
-	checkASTTypeID(ast, AST_INT, t)
-}
-
-func TestParseNegInt(t *testing.T) {
-	mustCompileRegexes()
-	program := []byte("-42")
-	tokens := mustLex(program)
-	ast := mustParse(tokens)
-	checkASTTypeID(ast, AST_PROGRAM, t)
-	checkSubnodesLen(ast, 1, t)
-	ast = ast.Subnodes[0]
-	checkASTTypeID(ast, AST_INT, t)
+	checkSubnodesLen(ast, 0, t)
 }
 
 func TestParseReal(t *testing.T) {
@@ -76,6 +44,7 @@ func TestParseReal(t *testing.T) {
 	checkSubnodesLen(ast, 1, t)
 	ast = ast.Subnodes[0]
 	checkASTTypeID(ast, AST_REAL, t)
+	checkSubnodesLen(ast, 0, t)
 }
 
 func TestParseNegReal(t *testing.T) {
@@ -87,6 +56,55 @@ func TestParseNegReal(t *testing.T) {
 	checkSubnodesLen(ast, 1, t)
 	ast = ast.Subnodes[0]
 	checkASTTypeID(ast, AST_REAL, t)
+	checkSubnodesLen(ast, 0, t)
+}
+
+func TestParseInt(t *testing.T) {
+	mustCompileRegexes()
+	program := []byte("42")
+	tokens := mustLex(program)
+	ast := mustParse(tokens)
+	checkASTTypeID(ast, AST_PROGRAM, t)
+	checkSubnodesLen(ast, 1, t)
+	ast = ast.Subnodes[0]
+	checkASTTypeID(ast, AST_INT, t)
+	checkSubnodesLen(ast, 0, t)
+}
+
+func TestParseNegInt(t *testing.T) {
+	mustCompileRegexes()
+	program := []byte("-42")
+	tokens := mustLex(program)
+	ast := mustParse(tokens)
+	checkASTTypeID(ast, AST_PROGRAM, t)
+	checkSubnodesLen(ast, 1, t)
+	ast = ast.Subnodes[0]
+	checkASTTypeID(ast, AST_INT, t)
+	checkSubnodesLen(ast, 0, t)
+}
+
+func TestParseKeyword(t *testing.T) {
+	mustCompileRegexes()
+	program := []byte(":foo")
+	tokens := mustLex(program)
+	ast := mustParse(tokens)
+	checkASTTypeID(ast, AST_PROGRAM, t)
+	checkSubnodesLen(ast, 1, t)
+	ast = ast.Subnodes[0]
+	checkASTTypeID(ast, AST_KEYWORD, t)
+	checkSubnodesLen(ast, 0, t)
+}
+
+func TestParseSymbol(t *testing.T) {
+	mustCompileRegexes()
+	program := []byte("foo")
+	tokens := mustLex(program)
+	ast := mustParse(tokens)
+	checkASTTypeID(ast, AST_PROGRAM, t)
+	checkSubnodesLen(ast, 1, t)
+	ast = ast.Subnodes[0]
+	checkASTTypeID(ast, AST_SYMBOL, t)
+	checkSubnodesLen(ast, 0, t)
 }
 
 func TestParseListEmpty(t *testing.T) {

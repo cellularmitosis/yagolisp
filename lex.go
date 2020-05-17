@@ -27,6 +27,7 @@ const (
 	TOK_STRING
 	TOK_REAL
 	TOK_INT
+	TOK_KEYWORD
 	TOK_SYMBOL
 )
 
@@ -43,7 +44,8 @@ var tokTypes = []TokenType{
 	{ID: TOK_STRING, Name: "TOK_STRING", Pattern: `^"([^"\\]|\\[\s\S])*"`, Regex: nil},
 	{ID: TOK_REAL, Name: "TOK_REAL", Pattern: `^-?\d+\.\d+`, Regex: nil},
 	{ID: TOK_INT, Name: "TOK_INT", Pattern: `^-?\d+`, Regex: nil},
-	{ID: TOK_SYMBOL, Name: "TOK_SYMBOL", Pattern: `^[^\(\)\[\]{}#:"\s]+`, Regex: nil},
+	{ID: TOK_KEYWORD, Name: "TOK_KEYWORD", Pattern: `^:[^\)\]#"\s]+`, Regex: nil},
+	{ID: TOK_SYMBOL, Name: "TOK_SYMBOL", Pattern: `^[^\)\]#"\s:]+`, Regex: nil},
 }
 
 // Token is a structure describing a lexeme.
