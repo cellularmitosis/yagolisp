@@ -16,22 +16,32 @@ type TokenType struct {
 
 // The Token type identifiers.
 const (
-	TOK_OPAREN = 1
-	TOK_CPAREN = 2
-	TOK_STRING = 3
-	TOK_WSPACE = 4
-	TOK_SYMBOL = 5
-	TOK_INT    = 6
+	TOK_OPAREN = iota
+	TOK_CPAREN
+	TOK_OBRACK
+	TOK_CBRACK
+	TOK_OBRACE
+	TOK_CBRACE
+	TOK_OHASHBRACE
+	TOK_STRING
+	TOK_WSPACE
+	TOK_SYMBOL
+	TOK_INT
 )
 
 // The table to token definitions.
 var tokTypes = []TokenType{
 	{ID: TOK_OPAREN, Name: "TOK_OPAREN", Pattern: `^\(`, Regex: nil},
 	{ID: TOK_CPAREN, Name: "TOK_CPAREN", Pattern: `^\)`, Regex: nil},
+	{ID: TOK_OBRACK, Name: "TOK_OBRACK", Pattern: `^\[`, Regex: nil},
+	{ID: TOK_CBRACK, Name: "TOK_CBRACK", Pattern: `^]`, Regex: nil},
+	{ID: TOK_OBRACE, Name: "TOK_OBRACE", Pattern: `^{`, Regex: nil},
+	{ID: TOK_CBRACE, Name: "TOK_CBRACE", Pattern: `^}`, Regex: nil},
+	{ID: TOK_OHASHBRACE, Name: "TOK_OHASHBRACE", Pattern: `^#{`, Regex: nil},
 	{ID: TOK_WSPACE, Name: "TOK_WSPACE", Pattern: `^[\s]+`, Regex: nil},
 	{ID: TOK_STRING, Name: "TOK_STRING", Pattern: `^"([^"\\]|\\[\s\S])*"`, Regex: nil},
 	{ID: TOK_INT, Name: "TOK_INT", Pattern: `^\d+`, Regex: nil},
-	{ID: TOK_SYMBOL, Name: "TOK_SYMBOL", Pattern: `^[^\(\)"\s]+`, Regex: nil},
+	{ID: TOK_SYMBOL, Name: "TOK_SYMBOL", Pattern: `^[^\(\)\[\]{}#:"\s]+`, Regex: nil},
 }
 
 // Token is a structure describing a lexeme.

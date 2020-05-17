@@ -13,18 +13,28 @@ type ASTNodeType struct {
 
 // The AST node type identifiers.
 const (
-	AST_PROGRAM = 1
-	AST_LIST    = 2
-	AST_SYMBOL  = 3
-	AST_STRING  = 4
-	AST_INT     = 5
+	AST_PROGRAM = iota
+
+	AST_SYMBOL
+	AST_KEYWORD
+	AST_STRING
+	AST_INT
+
+	AST_LIST
+	AST_VECTOR
+	AST_MAP
+	AST_SET
 )
 
 var astNodeTypes = []ASTNodeType{
-	{ID: AST_LIST, Name: "AST_LIST"},
 	{ID: AST_SYMBOL, Name: "AST_SYMBOL"},
+	{ID: AST_KEYWORD, Name: "AST_KEYWORD"},
 	{ID: AST_STRING, Name: "AST_STRING"},
 	{ID: AST_INT, Name: "AST_INT"},
+	{ID: AST_LIST, Name: "AST_LIST"},
+	{ID: AST_LIST, Name: "AST_VECTOR"},
+	{ID: AST_LIST, Name: "AST_MAP"},
+	{ID: AST_LIST, Name: "AST_SET"},
 }
 
 // ASTNode is a structure describing a node in an abstract syntax tree.
@@ -36,9 +46,14 @@ type ASTNode struct {
 
 // grammar (discarding whitespace):
 // AST_PROGRAM = expr+
-// expr = atom | AST_LIST
+// expr = atom | container
 // atom = AST_SYMBOL | AST_STRING | AST_INT
+// container = AST_LIST | AST_VECTOR | AST_MAP | AST_SET
 // AST_LIST = TOK_OPAREN expr* TOK_CPAREN
+// AST_VECTOR = TOK_OBRACK expr* TOK_CBRACK
+// AST_MAP = TOK_OBRACE kv_pair* TOK_CBRACE
+// kv_pair = expr expr
+// AST_SET = TOK_OHASHBRACE expr* TOK_CBRACE
 
 // Tries to parse the next token as a string.  Returns an AST node and the index of the next token.
 func parseString(tokens []Token, index uint) (*ASTNode, uint) {
