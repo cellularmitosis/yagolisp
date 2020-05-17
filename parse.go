@@ -19,6 +19,7 @@ const (
 	AST_KEYWORD
 	AST_STRING
 	AST_INT
+	AST_REAL
 
 	AST_LIST
 	AST_VECTOR
@@ -31,10 +32,11 @@ var astNodeTypes = []ASTNodeType{
 	{ID: AST_KEYWORD, Name: "AST_KEYWORD"},
 	{ID: AST_STRING, Name: "AST_STRING"},
 	{ID: AST_INT, Name: "AST_INT"},
+	{ID: AST_REAL, Name: "AST_REAL"},
 	{ID: AST_LIST, Name: "AST_LIST"},
-	{ID: AST_LIST, Name: "AST_VECTOR"},
-	{ID: AST_LIST, Name: "AST_MAP"},
-	{ID: AST_LIST, Name: "AST_SET"},
+	{ID: AST_VECTOR, Name: "AST_VECTOR"},
+	{ID: AST_MAP, Name: "AST_MAP"},
+	{ID: AST_SET, Name: "AST_SET"},
 }
 
 // ASTNode is a structure describing a node in an abstract syntax tree.
@@ -47,7 +49,7 @@ type ASTNode struct {
 // grammar (discarding whitespace):
 // AST_PROGRAM = expr+
 // expr = atom | container
-// atom = AST_SYMBOL | AST_STRING | AST_INT
+// atom = AST_SYMBOL | AST_STRING | AST_INT | AST_REAL
 // container = AST_LIST | AST_VECTOR | AST_MAP | AST_SET
 // AST_LIST = TOK_OPAREN expr* TOK_CPAREN
 // AST_VECTOR = TOK_OBRACK expr* TOK_CBRACK
@@ -97,6 +99,22 @@ func parseInt(tokens []Token, index uint) (*ASTNode, uint) {
 
 	ast := ASTNode{
 		TypeID:   AST_INT,
+		Bytes:    token.Bytes,
+		Subnodes: nil,
+	}
+	return &ast, index + 1
+}
+
+// Tries to parse the next token as a real.
+// Returns an AST node and the index of the next token.
+func parseReal(tokens []Token, index uint) (*ASTNode, uint) {
+	token := tokens[index]
+	if token.TypeID != TOK_REAL {
+		return nil, index
+	}
+
+	ast := ASTNode{
+		TypeID:   AST_REAL,
 		Bytes:    token.Bytes,
 		Subnodes: nil,
 	}
@@ -201,6 +219,10 @@ func parseAtom(tokens []Token, index uint) (*ASTNode, uint) {
 		return ast, index2
 	}
 	ast, index2 = parseInt(tokens, index)
+	if ast != nil {
+		return ast, index2
+	}
+	ast, index2 = parseReal(tokens, index)
 	if ast != nil {
 		return ast, index2
 	}
