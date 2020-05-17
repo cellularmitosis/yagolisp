@@ -51,7 +51,7 @@ func TestEvalNil(t *testing.T) {
 	ast := mustParse(tokens)
 	value := eval(ast)
 	switch typ := value.(type) {
-	case lispNil:
+	case LispNil:
 		break
 	default:
 		t.Errorf("value.(type) is %d but should be LispNil\n", typ)

@@ -148,10 +148,10 @@ func parseKeyword(tokens []Token, index uint) (*ASTNode, uint) {
 }
 
 // LispNil is a type representing the Lisp notion of nil.
-type lispNil struct{}
+type LispNil struct{}
 
 // LispNilValue is the global nil value singleton.
-var lispNilValue = lispNil{}
+var LispNilValue = LispNil{}
 
 // Tries to parse the next token as nil.
 // Returns an AST node and the index of the next token.
@@ -164,7 +164,7 @@ func parseNil(tokens []Token, index uint) (*ASTNode, uint) {
 	ast := ASTNode{
 		TypeID:   AST_NIL,
 		Bytes:    token.Bytes,
-		Value:    lispNilValue,
+		Value:    LispNilValue,
 		Subnodes: nil,
 	}
 	return &ast, index + 1
