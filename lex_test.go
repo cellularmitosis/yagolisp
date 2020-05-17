@@ -2,14 +2,18 @@ package main
 
 import "testing"
 
+func checkTokTypeID(token Token, expectedTypeID uint, t *testing.T) {
+	if token.TypeID != expectedTypeID {
+		t.Errorf("token.TypeID is %d but should be %d\n", token.TypeID, expectedTypeID)
+	}
+}
+
 func TestLexString(t *testing.T) {
 	mustCompileRegexes()
 	source := []byte(`"Hello, world!"`)
 	tokens := mustLex(source)
 	token := tokens[0]
-	if token.TypeID != TOK_STRING {
-		t.Errorf("ast.TypeID is %d but should be %d\n", token.TypeID, TOK_STRING)
-	}
+	checkTokTypeID(token, TOK_STRING, t)
 }
 
 func TestLexInt(t *testing.T) {
@@ -17,9 +21,7 @@ func TestLexInt(t *testing.T) {
 	source := []byte("42")
 	tokens := mustLex(source)
 	token := tokens[0]
-	if token.TypeID != TOK_INT {
-		t.Errorf("ast.TypeID is %d but should be %d\n", token.TypeID, TOK_INT)
-	}
+	checkTokTypeID(token, TOK_INT, t)
 }
 
 func TestLexEmptyList(t *testing.T) {
@@ -27,13 +29,9 @@ func TestLexEmptyList(t *testing.T) {
 	source := []byte("()")
 	tokens := mustLex(source)
 	token := tokens[0]
-	if token.TypeID != TOK_OPAREN {
-		t.Errorf("ast.TypeID is %d but should be %d\n", token.TypeID, TOK_OPAREN)
-	}
+	checkTokTypeID(token, TOK_OPAREN, t)
 	token = tokens[1]
-	if token.TypeID != TOK_CPAREN {
-		t.Errorf("ast.TypeID is %d but should be %d\n", token.TypeID, TOK_CPAREN)
-	}
+	checkTokTypeID(token, TOK_CPAREN, t)
 }
 
 func TestLexEmptyVector(t *testing.T) {
@@ -41,13 +39,9 @@ func TestLexEmptyVector(t *testing.T) {
 	source := []byte("[]")
 	tokens := mustLex(source)
 	token := tokens[0]
-	if token.TypeID != TOK_OBRACK {
-		t.Errorf("ast.TypeID is %d but should be %d\n", token.TypeID, TOK_OBRACK)
-	}
+	checkTokTypeID(token, TOK_OBRACK, t)
 	token = tokens[1]
-	if token.TypeID != TOK_CBRACK {
-		t.Errorf("ast.TypeID is %d but should be %d\n", token.TypeID, TOK_CBRACK)
-	}
+	checkTokTypeID(token, TOK_CBRACK, t)
 }
 
 func TestLexEmptyMap(t *testing.T) {
@@ -55,13 +49,9 @@ func TestLexEmptyMap(t *testing.T) {
 	source := []byte("{}")
 	tokens := mustLex(source)
 	token := tokens[0]
-	if token.TypeID != TOK_OBRACE {
-		t.Errorf("ast.TypeID is %d but should be %d\n", token.TypeID, TOK_OBRACE)
-	}
+	checkTokTypeID(token, TOK_OBRACE, t)
 	token = tokens[1]
-	if token.TypeID != TOK_CBRACE {
-		t.Errorf("ast.TypeID is %d but should be %d\n", token.TypeID, TOK_CBRACE)
-	}
+	checkTokTypeID(token, TOK_CBRACE, t)
 }
 
 func TestLexEmptySet(t *testing.T) {
@@ -69,11 +59,7 @@ func TestLexEmptySet(t *testing.T) {
 	source := []byte("#{}")
 	tokens := mustLex(source)
 	token := tokens[0]
-	if token.TypeID != TOK_OHASHBRACE {
-		t.Errorf("ast.TypeID is %d but should be %d\n", token.TypeID, TOK_OHASHBRACE)
-	}
+	checkTokTypeID(token, TOK_OHASHBRACE, t)
 	token = tokens[1]
-	if token.TypeID != TOK_CBRACE {
-		t.Errorf("ast.TypeID is %d but should be %d\n", token.TypeID, TOK_CBRACE)
-	}
+	checkTokTypeID(token, TOK_CBRACE, t)
 }
