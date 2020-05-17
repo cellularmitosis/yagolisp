@@ -10,4 +10,4 @@ bench:
 run:
 	go run .
 
-.PHONY: test build bench
+.PHONY: test build bench run

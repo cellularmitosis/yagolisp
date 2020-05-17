@@ -2,14 +2,18 @@ package main
 
 import "testing"
 
+func checkASTTypeID(ast *ASTNode, expectedTypeID uint, t *testing.T) {
+	if ast.TypeID != expectedTypeID {
+		t.Errorf("ast.TypeID is %d but should be %d\n", ast.TypeID, expectedTypeID)
+	}
+}
+
 func TestParseEmpty(t *testing.T) {
 	mustCompileRegexes()
 	program := []byte("")
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
-	if ast.TypeID != AST_PROGRAM {
-		t.Errorf("ast.TypeID is %d but should be %d\n", ast.TypeID, AST_PROGRAM)
-	}
+	checkASTTypeID(ast, AST_PROGRAM, t)
 	if len(ast.Subnodes) != 0 {
 		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), 1)
 	}
@@ -20,16 +24,12 @@ func TestParseSymbol(t *testing.T) {
 	program := []byte("foo")
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
-	if ast.TypeID != AST_PROGRAM {
-		t.Errorf("ast.TypeID is %d but should be %d\n", ast.TypeID, AST_PROGRAM)
-	}
+	checkASTTypeID(ast, AST_PROGRAM, t)
 	if len(ast.Subnodes) != 1 {
 		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), 1)
 	}
 	ast = ast.Subnodes[0]
-	if ast.TypeID != AST_SYMBOL {
-		t.Errorf("ast.TypeID is %d but should be %d\n", ast.TypeID, AST_SYMBOL)
-	}
+	checkASTTypeID(ast, AST_SYMBOL, t)
 }
 
 func TestParseString(t *testing.T) {
@@ -37,16 +37,12 @@ func TestParseString(t *testing.T) {
 	program := []byte(`"foo"`)
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
-	if ast.TypeID != AST_PROGRAM {
-		t.Errorf("ast.TypeID is %d but should be %d\n", ast.TypeID, AST_PROGRAM)
-	}
+	checkASTTypeID(ast, AST_PROGRAM, t)
 	if len(ast.Subnodes) != 1 {
 		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), 1)
 	}
 	ast = ast.Subnodes[0]
-	if ast.TypeID != AST_STRING {
-		t.Errorf("ast.TypeID is %d but should be %d\n", ast.TypeID, AST_STRING)
-	}
+	checkASTTypeID(ast, AST_STRING, t)
 }
 
 func TestParseInt(t *testing.T) {
@@ -54,16 +50,12 @@ func TestParseInt(t *testing.T) {
 	program := []byte("42")
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
-	if ast.TypeID != AST_PROGRAM {
-		t.Errorf("ast.TypeID is %d but should be %d\n", ast.TypeID, AST_PROGRAM)
-	}
+	checkASTTypeID(ast, AST_PROGRAM, t)
 	if len(ast.Subnodes) != 1 {
 		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), 1)
 	}
 	ast = ast.Subnodes[0]
-	if ast.TypeID != AST_INT {
-		t.Errorf("ast.TypeID is %d but should be %d\n", ast.TypeID, AST_INT)
-	}
+	checkASTTypeID(ast, AST_INT, t)
 }
 
 func TestParseListEmpty(t *testing.T) {
@@ -71,49 +63,51 @@ func TestParseListEmpty(t *testing.T) {
 	program := []byte("()")
 	tokens := mustLex(program)
 	ast := mustParse(tokens)
-	if ast.TypeID != AST_PROGRAM {
-		t.Errorf("ast.TypeID is %d but should be %d\n", ast.TypeID, AST_PROGRAM)
-	}
+	checkASTTypeID(ast, AST_PROGRAM, t)
 	if len(ast.Subnodes) != 1 {
 		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), 1)
 	}
 	ast = ast.Subnodes[0]
-	if ast.TypeID != AST_LIST {
-		t.Errorf("ast.TypeID is %d but should be %d\n", ast.TypeID, AST_LIST)
-	}
+	checkASTTypeID(ast, AST_LIST, t)
 	if len(ast.Subnodes) != 0 {
 		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), 0)
 	}
 }
 
-func TestParseListSymbol(t *testing.T) {
+func TestParseListSymbolStringInt(t *testing.T) {
 	mustCompileRegexes()
 	program := []byte(`(foo "bar" 42)`)
 	tokens := mustLex(program)
 	prog := mustParse(tokens)
-	if prog.TypeID != AST_PROGRAM {
-		t.Errorf("ast.TypeID is %d but should be %d\n", prog.TypeID, AST_PROGRAM)
-	}
+	checkASTTypeID(prog, AST_PROGRAM, t)
 	if len(prog.Subnodes) != 1 {
 		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(prog.Subnodes), 1)
 	}
 	list := prog.Subnodes[0]
-	if list.TypeID != AST_LIST {
-		t.Errorf("ast.TypeID is %d but should be %d\n", list.TypeID, AST_LIST)
-	}
+	checkASTTypeID(list, AST_LIST, t)
 	if len(list.Subnodes) != 3 {
 		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(list.Subnodes), 3)
 	}
 	sym := list.Subnodes[0]
-	if sym.TypeID != AST_SYMBOL {
-		t.Errorf("ast.TypeID is %d but should be %d\n", sym.TypeID, AST_SYMBOL)
-	}
+	checkASTTypeID(sym, AST_SYMBOL, t)
 	str := list.Subnodes[1]
-	if str.TypeID != AST_STRING {
-		t.Errorf("ast.TypeID is %d but should be %d\n", str.TypeID, AST_STRING)
-	}
+	checkASTTypeID(str, AST_STRING, t)
 	i := list.Subnodes[2]
-	if i.TypeID != AST_INT {
-		t.Errorf("ast.TypeID is %d but should be %d\n", i.TypeID, AST_INT)
-	}
+	checkASTTypeID(i, AST_INT, t)
 }
+
+// func TestParseVectorEmpty(t *testing.T) {
+// 	mustCompileRegexes()
+// 	program := []byte("[]")
+// 	tokens := mustLex(program)
+// 	ast := mustParse(tokens)
+// 	checkASTTypeID(ast, AST_PROGRAM, t)
+// 	if len(ast.Subnodes) != 1 {
+// 		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), 1)
+// 	}
+// 	ast = ast.Subnodes[0]
+// 	checkASTTypeID(ast, AST_VECTOR, t)
+// 	if len(ast.Subnodes) != 0 {
+// 		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), 0)
+// 	}
+// }
