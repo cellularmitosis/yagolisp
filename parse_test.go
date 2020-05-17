@@ -58,6 +58,19 @@ func TestParseInt(t *testing.T) {
 	checkASTTypeID(ast, AST_INT, t)
 }
 
+func TestParseNegInt(t *testing.T) {
+	mustCompileRegexes()
+	program := []byte("-42")
+	tokens := mustLex(program)
+	ast := mustParse(tokens)
+	checkASTTypeID(ast, AST_PROGRAM, t)
+	if len(ast.Subnodes) != 1 {
+		t.Errorf("len(ast.Subnodes) is %d but should be %d\n", len(ast.Subnodes), 1)
+	}
+	ast = ast.Subnodes[0]
+	checkASTTypeID(ast, AST_INT, t)
+}
+
 func TestParseListEmpty(t *testing.T) {
 	mustCompileRegexes()
 	program := []byte("()")
