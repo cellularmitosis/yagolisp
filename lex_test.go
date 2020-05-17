@@ -8,6 +8,13 @@ func checkTokTypeID(token Token, expectedTypeID uint, t *testing.T) {
 	}
 }
 
+// thanks to https://gist.github.com/samalba/6059502#gistcomment-2331327
+func assertEqual(t *testing.T, a interface{}, b interface{}) {
+	if a != b {
+		t.Fatalf("%s != %s", a, b)
+	}
+}
+
 func TestLexString(t *testing.T) {
 	mustCompileRegexes()
 	source := []byte(`"Hello, world!"`)
@@ -102,4 +109,17 @@ func TestLexEmptySet(t *testing.T) {
 	checkTokTypeID(token, TOK_OHASHBRACE, t)
 	token = tokens[1]
 	checkTokTypeID(token, TOK_CBRACE, t)
+}
+
+// Commas are considered whitespace.
+func TestLexComma(t *testing.T) {
+	mustCompileRegexes()
+	source := []byte(`foo, bar`)
+	tokens := mustLex(source)
+	token := tokens[0]
+	checkTokTypeID(token, TOK_SYMBOL, t)
+	assertEqual(t, string(token.Bytes), "foo")
+	token = tokens[1]
+	checkTokTypeID(token, TOK_SYMBOL, t)
+	assertEqual(t, string(token.Bytes), "bar")
 }
