@@ -22,13 +22,19 @@ func die(msg string, err error, code int) {
 	os.Exit(code)
 }
 
-type LispValue interface{}
-
 // This function is the program's entry point.
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
 	mustCompileRegexes()
+
+	// create a hard-coded env for now.
+	globalBindings := make(Bindings)
+	globalBindings["foo"] = LispInt(5)
+	env := EnvStack{
+		Bindings: globalBindings,
+		Next:     nil,
+	}
 
 	var bytes []byte
 	if len(os.Args) > 1 {
@@ -38,6 +44,7 @@ func main() {
 
 	tokens := mustLex(bytes)
 	ast := mustParse(tokens)
-	value := eval(ast)
+	value := eval(ast, &env)
 	_ = value
+	fmt.Printf("%s\n", value.LispValueString())
 }

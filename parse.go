@@ -52,7 +52,7 @@ var astNodeTypes = []ASTNodeType{
 type ASTNode struct {
 	TypeID   uint
 	Bytes    []byte
-	Value    interface{}
+	Value    LispValue
 	Subnodes []*ASTNode
 }
 
@@ -78,7 +78,7 @@ func parseString(tokens []Token, index uint) (*ASTNode, uint) {
 	ast := ASTNode{
 		TypeID:   AST_STRING,
 		Bytes:    token.Bytes,
-		Value:    string(token.Bytes),
+		Value:    LispString(token.Bytes),
 		Subnodes: nil,
 	}
 	return &ast, index + 1
@@ -101,7 +101,7 @@ func parseReal(tokens []Token, index uint) (*ASTNode, uint) {
 	ast := ASTNode{
 		TypeID:   AST_REAL,
 		Bytes:    token.Bytes,
-		Value:    value,
+		Value:    LispReal(value),
 		Subnodes: nil,
 	}
 	return &ast, index + 1
@@ -125,7 +125,7 @@ func parseInt(tokens []Token, index uint) (*ASTNode, uint) {
 	ast := ASTNode{
 		TypeID:   AST_INT,
 		Bytes:    token.Bytes,
-		Value:    int(value),
+		Value:    LispInt(value),
 		Subnodes: nil,
 	}
 	return &ast, index + 1
@@ -142,16 +142,11 @@ func parseKeyword(tokens []Token, index uint) (*ASTNode, uint) {
 	ast := ASTNode{
 		TypeID:   AST_KEYWORD,
 		Bytes:    token.Bytes,
+		Value:    LispKeyword(token.Bytes),
 		Subnodes: nil,
 	}
 	return &ast, index + 1
 }
-
-// LispNil is a type representing the Lisp notion of nil.
-type LispNil struct{}
-
-// LispNilValue is the global nil value singleton.
-var LispNilValue = LispNil{}
 
 // Tries to parse the next token as nil.
 // Returns an AST node and the index of the next token.
@@ -164,7 +159,7 @@ func parseNil(tokens []Token, index uint) (*ASTNode, uint) {
 	ast := ASTNode{
 		TypeID:   AST_NIL,
 		Bytes:    token.Bytes,
-		Value:    LispNilValue,
+		Value:    LispNil{},
 		Subnodes: nil,
 	}
 	return &ast, index + 1
@@ -182,7 +177,7 @@ func parseBool(tokens []Token, index uint) (*ASTNode, uint) {
 		ast := ASTNode{
 			TypeID:   AST_BOOL,
 			Bytes:    token.Bytes,
-			Value:    true,
+			Value:    LispBool(true),
 			Subnodes: nil,
 		}
 		return &ast, index + 1
@@ -192,7 +187,7 @@ func parseBool(tokens []Token, index uint) (*ASTNode, uint) {
 		ast := ASTNode{
 			TypeID:   AST_BOOL,
 			Bytes:    token.Bytes,
-			Value:    false,
+			Value:    LispBool(false),
 			Subnodes: nil,
 		}
 		return &ast, index + 1
@@ -212,6 +207,7 @@ func parseSymbol(tokens []Token, index uint) (*ASTNode, uint) {
 	ast := ASTNode{
 		TypeID:   AST_SYMBOL,
 		Bytes:    token.Bytes,
+		Value:    LispSymbol(token.Bytes),
 		Subnodes: nil,
 	}
 	return &ast, index + 1
